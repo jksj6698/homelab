@@ -15,8 +15,9 @@ Les schémas sont écrits en [Mermaid](https://mermaid.js.org/) : GitHub les aff
 - **Un pare-feu central** (OPNsense) et des zones étanches, en refus par défaut.
 - **Une seule entrée pour les sites** : un reverse proxy avec pare-feu applicatif (WAF).
 - **Administration par Teleport**, joignable seulement à travers un VPN, avec double authentification.
+- **Identité des clients** : un fournisseur unique (OpenID), clés d'accès (passkeys), session liée au réseau du client.
 - **Pas d'accès internet direct par défaut** : un dépôt local approvisionne toutes les machines.
-- **Détection** : Wazuh (SIEM), CrowdSec (décisions appliquées par le pare-feu central), WAF Coraza avec l'OWASP CRS.
+- **Détection** : Wazuh (SIEM), CrowdSec (décisions appliquées par le pare-feu central), WAF Coraza avec l'OWASP CRS, fichiers-pièges sur les machines exposées.
 - **Supervision** : Prometheus, Alertmanager, Grafana, sondes externes réelles.
 - **CI/CD** : Gitea Actions, un seul workflow pour tous les projets, runner sans privilège.
 - **Mises à jour automatiques** par anneaux, avec redémarrages contrôlés.
@@ -45,6 +46,7 @@ Les schémas sont écrits en [Mermaid](https://mermaid.js.org/) : GitHub les aff
 | Virtualisation | Proxmox VE, PXVirt (Proxmox pour ARM), conteneurs LXC |
 | Réseau et périmètre | OPNsense, WireGuard, Unbound |
 | Accès | Teleport (édition Community) |
+| Identité | Authentik (OpenID), clés d'accès (WebAuthn) |
 | Web | Traefik, Coraza et OWASP CRS, nginx durci |
 | Détection | Wazuh, CrowdSec |
 | Supervision | Prometheus, Alertmanager, Grafana, blackbox_exporter |

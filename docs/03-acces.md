@@ -51,6 +51,8 @@ sequenceDiagram
 - **Sessions enregistrées** et journalisées.
 - **Interfaces web** : chaque interface d'administration a sa propre adresse derrière Teleport, couverte par un
   certificat joker ; les nouvelles se déclarent dynamiquement, sans redémarrer le bastion.
+- **La console du fournisseur d'identité** est publiée de la même façon, par l'agent de sa propre machine : elle reste
+  ainsi hors d'atteinte depuis internet, accessible seulement après authentification au bastion.
 - **Les mises à jour de nuit vérifient, avant tout redémarrage, que la machine restera joignable par Teleport** :
   service activé au démarrage, nom du bastion bien résolu, fichier `hosts` protégé contre cloud-init. Sinon, le
   redémarrage est annulé et une alerte part (voir [mises à jour](09-mises-a-jour.md)).
