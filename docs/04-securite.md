@@ -97,7 +97,7 @@ Les applications destinées aux clients ne gèrent pas elles-mêmes les mots de 
 Des **fichiers-pièges** (faux identifiants, fausse sauvegarde, fausse clé) sont posés sur les machines exposées. Ils ne
 servent qu'à être surveillés : toute lecture déclenche une alerte, avec le programme et le compte qui l'a ouverte.
 C'est un signal d'intrusion à très faible bruit — personne n'a de raison légitime d'y toucher (voir
-[supervision](10-supervision.md) et [retours d'expérience](11-retours-d-experience.md)).
+[supervision](10-supervision.md)).
 
 ## Chaîne d'approvisionnement
 

@@ -43,4 +43,4 @@ flowchart LR
   empreinte, et signature quand l'éditeur en publie une.
 
 Un exemple de ce que ce modèle rattrape : un cache APT qui avait rangé des paquets sous le nom d'autres paquets. Les
-signatures ont refusé les fichiers, rien de faux n'a été installé (voir [retours d'expérience](11-retours-d-experience.md)).
+signatures ont refusé les fichiers, rien de faux n'a été installé.
