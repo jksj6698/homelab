@@ -55,6 +55,9 @@ flowchart LR
 - **Comptes de service à commande forcée** : sauvegardes, déploiements et signatures de certificats passent par des
   comptes dédiés dont la clé SSH ne peut lancer qu'un seul script (`restrict`, `from=`, `command=`), avec `sudo` limité
   à ce script.
+- **Hôtes réduits à l'essentiel** : résolution de noms multicast (LLMNR) coupée, réglages noyau de durcissement réseau
+  (anti-usurpation, pas de redirections ICMP, traces des paquets anormaux), connexion SSH par clé seulement, et aucune
+  sortie internet là où elle n'est pas nécessaire.
 
 ## Conteneurs et services
 
@@ -71,6 +74,30 @@ Les images maison appliquent par défaut :
 
 Les services installés nativement suivent la même idée avec systemd : compte dédié, une seule capacité si besoin,
 `NoNewPrivileges`, système en lecture seule sauf les données (`ProtectSystem=strict`), `/tmp` privé.
+
+## Identité des clients
+
+Les applications destinées aux clients ne gèrent pas elles-mêmes les mots de passe : elles s'appuient sur un
+**fournisseur d'identité unique** (Authentik), réutilisable d'un projet à l'autre.
+
+- **Clés d'accès (passkeys)** : l'authentification repose sur WebAuthn, lié au vrai domaine. Une fausse page de
+  connexion ne peut pas rejouer une clé d'accès — l'hameçonnage classique ne prend pas.
+- **Session liée au réseau du client** : le cookie de session est attaché à l'opérateur d'origine. Rejoué depuis un
+  autre fournisseur d'accès, il est refusé — un vol de cookie seul ne suffit plus.
+- **Chaque application vérifie elle-même le jeton** : elle fait sa propre connexion OpenID et contrôle la signature du
+  jeton (clé publique annoncée par le fournisseur, algorithmes faibles refusés, émetteur et destinataire vérifiés).
+  Elle ne fait jamais confiance à un en-tête injecté par le proxy, qui pourrait être forgé si on atteignait
+  l'application par un autre chemin.
+- **Fournisseur durci et hors de portée** : le fournisseur d'identité suit le même durcissement que les autres
+  conteneurs ; il n'écoute qu'en local, et sa console d'administration n'est joignable qu'à travers le bastion, jamais
+  depuis internet (voir [accès](03-acces.md)).
+
+## Leurres
+
+Des **fichiers-pièges** (faux identifiants, fausse sauvegarde, fausse clé) sont posés sur les machines exposées. Ils ne
+servent qu'à être surveillés : toute lecture déclenche une alerte, avec le programme et le compte qui l'a ouverte.
+C'est un signal d'intrusion à très faible bruit — personne n'a de raison légitime d'y toucher (voir
+[supervision](10-supervision.md) et [retours d'expérience](11-retours-d-experience.md)).
 
 ## Chaîne d'approvisionnement
 

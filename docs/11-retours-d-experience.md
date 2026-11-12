@@ -50,3 +50,18 @@ pour le certificat, Ed25519 seulement pour le transport SSH.*
 
 **Un faux échec de vérification TLS.** `openssl s_client` sans `-CAfile` affiche une erreur de chaîne alors que le
 certificat est valide. *Règle : prouver la cause avant de corriger quoi que ce soit.*
+
+## Détection et accès
+
+**Un fichier-piège qui sonne pour rien.** Le premier matin, un leurre a déclenché une alerte d'intrusion. Le journal
+d'audit a tout de suite nommé le coupable : le scanner d'intégrité, qui lit chaque fichier pour en calculer l'empreinte
+— les leurres compris — sous aucun compte humain. Vraie lecture, mais lecteur légitime. *Règle : un piège doit ignorer
+ses lecteurs légitimes connus (le scanner d'intégrité) et ne compter que les lectures qui n'ont rien à y faire.*
+
+**Donner un rôle de plus à l'agent d'accès de la machine par laquelle on y est connecté.** Ajouter la publication d'une
+console web à l'agent du bastion, sur la machine même qu'on administre à travers lui : un redémarrage raté de l'agent,
+et on perd l'accès. Le changement a été posé par un garde indépendant de la session, qui redémarre l'agent, vérifie
+qu'il revient sain, et restaure l'ancienne configuration tout seul sinon. Deux pièges au passage : un en-tête transmis
+réservé, que l'agent pose lui-même et refuse qu'on réécrive ; et un rôle nouveau qui ne s'obtient pas en silence, mais
+en re-rejoignant le bastion avec un jeton d'enrôlement neuf. *Règle : une modification du chemin d'accès embarque son
+propre garde et son retour arrière, détachés de la session en cours.*

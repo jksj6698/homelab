@@ -50,6 +50,7 @@ flowchart LR
 |---|---|
 | Disponibilité | site injoignable de l'extérieur, tunnel de sonde coupé, machine injoignable |
 | Accès | machine plus joignable par Teleport, redémarrage qui la rendrait injoignable |
+| Intrusion | fichier-piège lu sur une machine exposée |
 | Agents | Teleport, Wazuh ou CrowdSec arrêté |
 | Mises à jour système | correctifs de sécurité en attente trop longtemps, redémarrage en attente, passage en échec ou absent |
 | Mises à jour des conteneurs | retour arrière effectué ou en échec, passage absent |
