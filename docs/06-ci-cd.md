@@ -90,6 +90,44 @@ avec la fin du journal.
 - **Un seul conteneur par projet** : aucun fichier compose n'est appliqué, puisqu'il pourrait demander le mode
   privilégié ou monter le disque de l'hôte.
 
+## La mise en production
+
+Sur `main`, le workflow ne fait rien pour un projet absent de la liste d'autorisation tenue au niveau de
+l'organisation : ni construction, ni déploiement, ni mail. Pour un projet autorisé :
+
+```mermaid
+flowchart TB
+    F(["Fusion sur main"])
+    L{"Projet autorisé ?"}
+    X["Rien ne se passe"]
+    B["Construction arm64<br/>sans réseau"]
+    I["Image publiée sous<br/>l'identifiant du commit"]
+    S{"Service déclaré en production<br/>et image issue de la pipeline ?"}
+    R["Refus, rien n'est touché"]
+    D["Démarrage de cette<br/>version exacte"]
+    H{"Stable, puis<br/>réponse HTTP ?"}
+    OK["En ligne, mail vert"]
+    KO["Version précédente remise,<br/>mail rouge"]
+
+    F --> L
+    L -- "non" --> X
+    L -- "oui" --> B --> I --> S
+    S -- "non" --> R
+    S -- "oui" --> D --> H
+    H -- "oui" --> OK
+    H -- "non" --> KO
+```
+
+- **Version exacte** : la production récupère l'image du commit fusionné, jamais une étiquette « dernière version » qui
+  aurait pu changer entre-temps.
+- **Périmètre fermé** : le script de déploiement refuse un service qui n'est pas déclaré à la main côté production, ou
+  qui n'utilise pas l'image produite par la pipeline. Un site géré autrement ne peut pas être touché par la CI.
+- **Contrôles avant et après** : l'architecture de l'image est vérifiée avant le lancement ; le nouveau conteneur doit
+  rester stable plusieurs secondes puis répondre en HTTP. Sinon, la version précédente est remise et l'échec est
+  journalisé sur la machine.
+- **Exposition** : les sites mis en production par la pipeline passent par le pare-feu applicatif et reçoivent leurs
+  propres réglages au reverse proxy, dont HSTS et une limite de débit par adresse.
+
 ## Deux modes de construction
 
 | Mode | Détecté quand | Résultat |
