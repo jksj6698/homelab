@@ -37,6 +37,7 @@ Les schémas sont écrits en [Mermaid](https://mermaid.js.org/) : GitHub les aff
 | [Certificats](docs/08-certificats.md) | Un relais de signature : la clé privée ne quitte jamais sa machine |
 | [Mises à jour](docs/09-mises-a-jour.md) | Anneaux, redémarrages contrôlés, retour arrière automatique |
 | [Supervision](docs/10-supervision.md) | Métriques, sondes externes, alertes, SIEM |
+| [Espace client](docs/11-espace-client.md) | Connexion déléguée, droits par groupe, publication du contenu sans accès à la forge |
 
 ## Briques
 
